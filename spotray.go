@@ -21,16 +21,16 @@ type keyState struct {
 }
 
 type Item struct {
-	key   string
-	value string
+	Key   string
+	Value string
 }
 
 type State struct {
 	Options  []Item
-	Keybinds map[int32]func(*app)
+	Keybinds map[int32]func(*App)
 }
 
-type app struct {
+type App struct {
 	state          *State
 	lastPressed    map[int32]keyState
 	searchTerm     string
@@ -40,10 +40,10 @@ type app struct {
 	font           rl.Font
 }
 
-func NewApp() *app {
-	a := &app{
+func NewApp() *App {
+	a := &App{
 		state:          nil,
-		lastPressed:    nil,
+		lastPressed:    make(map[int32]keyState),
 		searchTerm:     "",
 		prevSearchTerm: " ",
 		selectedIndex:  0,
@@ -51,14 +51,13 @@ func NewApp() *app {
 	}
 	rl.SetConfigFlags(rl.FlagWindowUndecorated | rl.FlagWindowTransparent)
 	rl.InitWindow(1, 1, "")
-	a.font = rl.LoadFontEx("RobotoMonoNerdFont-Medium.ttf", 20, nil)
-	rl.SetWindowSize(rl.GetMonitorHeight(0), rl.GetMonitorWidth(0)-26)
+	rl.SetWindowSize(rl.GetMonitorWidth(0), rl.GetMonitorHeight(0)-26)
 	rl.SetWindowPosition(0, 26)
 	rl.SetTargetFPS(60)
 	return a
 }
 
-func (a *app) Start() error {
+func (a *App) Start() error {
 	if a.state == nil {
 		return errors.New("state is nil")
 	}
@@ -72,7 +71,7 @@ func (a *app) Start() error {
 		if a.prevSearchTerm != a.searchTerm {
 			a.filtered = make([]Item, 0)
 			for _, v := range a.state.Options {
-				if strings.Contains(strings.ToLower(v.value), strings.ToLower(a.searchTerm)) {
+				if strings.Contains(strings.ToLower(v.Value), strings.ToLower(a.searchTerm)) {
 					a.filtered = append(a.filtered, v)
 				}
 			}
@@ -98,7 +97,7 @@ func (a *app) Start() error {
 		rl.ClearBackground(rl.Color{R: 30, G: 45, B: 50, A: 200})
 		rl.DrawTextEx(a.font, a.searchTerm, rl.Vector2{X: 5, Y: 5}, 20, 0, rl.White)
 		for i, v := range a.filtered {
-			rl.DrawTextEx(a.font, v.value, rl.Vector2{X: 5, Y: float32(2 + (i+1)*20)}, 20, 0, rl.White)
+			rl.DrawTextEx(a.font, v.Value, rl.Vector2{X: 5, Y: float32(2 + (i+1)*20)}, 20, 0, rl.White)
 		}
 
 		if len(a.filtered) > 0 {
@@ -110,15 +109,15 @@ func (a *app) Start() error {
 	return nil
 }
 
-func (a *app) SetState(s *State) {
+func (a *App) SetState(s *State) {
 	a.state = s
 	a.prevSearchTerm = a.searchTerm + " "
 
-	s.Keybinds[rl.KeyBackspace] = func(a *app) {
+	s.Keybinds[rl.KeyBackspace] = func(a *App) {
 		a.searchTerm = a.searchTerm[:len(a.searchTerm)-1]
 	}
-	s.Keybinds[rl.KeyDown] = func(a *app) { a.selectedIndex++ }
-	s.Keybinds[rl.KeyUp] = func(a *app) { a.selectedIndex-- }
+	s.Keybinds[rl.KeyDown] = func(a *App) { a.selectedIndex++ }
+	s.Keybinds[rl.KeyUp] = func(a *App) { a.selectedIndex-- }
 
 	for i := range s.Keybinds {
 		a.lastPressed[i] = keyState{time.Now().UnixMilli(), FIRST}
