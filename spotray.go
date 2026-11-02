@@ -86,7 +86,7 @@ func (a *App) Start() error {
 			if rl.IsKeyPressed(i) {
 				a.lastPressed[i] = keyState{time: rn, d: FIRST}
 			} else if rl.IsKeyDown(i) {
-				if (a.lastPressed[i].d == FIRST && a.lastPressed[i].time+500 < rn) || (a.lastPressed[i].d == REPEAT && a.lastPressed[i].time+50 < rn) {
+				if (a.lastPressed[i].d == FIRST && a.lastPressed[i].time+150 < rn) || (a.lastPressed[i].d == REPEAT && a.lastPressed[i].time+40 < rn) {
 					a.lastPressed[i] = keyState{time: rn, d: REPEAT}
 					v(a)
 				}
@@ -114,7 +114,9 @@ func (a *App) SetState(s *State) {
 	a.prevSearchTerm = a.searchTerm + " "
 
 	s.Keybinds[rl.KeyBackspace] = func(a *App) {
-		a.searchTerm = a.searchTerm[:len(a.searchTerm)-1]
+		if len(a.searchTerm) > 0 {
+			a.searchTerm = a.searchTerm[:len(a.searchTerm)-1]
+		}
 	}
 	s.Keybinds[rl.KeyDown] = func(a *App) { a.selectedIndex++ }
 	s.Keybinds[rl.KeyUp] = func(a *App) { a.selectedIndex-- }
