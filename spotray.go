@@ -40,14 +40,8 @@ type app struct {
 	font           rl.Font
 }
 
-func (a *app) NewApp() *app {
-	rl.SetConfigFlags(rl.FlagWindowUndecorated | rl.FlagWindowTransparent)
-	rl.InitWindow(1, 1, "")
-	a.font = rl.LoadFontEx("RobotoMonoNerdFont-Medium.ttf", 20, nil)
-	rl.SetWindowSize(rl.GetMonitorHeight(0), rl.GetMonitorWidth(0)-26)
-	rl.SetWindowPosition(0, 26)
-	rl.SetTargetFPS(60)
-	return &app{
+func NewApp() *app {
+	a := &app{
 		state:          nil,
 		lastPressed:    nil,
 		searchTerm:     "",
@@ -55,6 +49,13 @@ func (a *app) NewApp() *app {
 		selectedIndex:  0,
 		filtered:       nil,
 	}
+	rl.SetConfigFlags(rl.FlagWindowUndecorated | rl.FlagWindowTransparent)
+	rl.InitWindow(1, 1, "")
+	a.font = rl.LoadFontEx("RobotoMonoNerdFont-Medium.ttf", 20, nil)
+	rl.SetWindowSize(rl.GetMonitorHeight(0), rl.GetMonitorWidth(0)-26)
+	rl.SetWindowPosition(0, 26)
+	rl.SetTargetFPS(60)
+	return a
 }
 
 func (a *app) Start() error {
@@ -111,7 +112,7 @@ func (a *app) Start() error {
 
 func (a *app) SetState(s *State) {
 	a.state = s
-	a.prevSearchTerm = a.searchTerm+" "
+	a.prevSearchTerm = a.searchTerm + " "
 
 	s.Keybinds[rl.KeyBackspace] = func(a *app) {
 		a.searchTerm = a.searchTerm[:len(a.searchTerm)-1]
