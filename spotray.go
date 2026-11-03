@@ -100,7 +100,7 @@ func (a *App) Start() error {
 		rl.ClearBackground(rl.Color{R: 30, G: 45, B: 50, A: 200})
 		rl.DrawTextEx(a.font, a.searchTerm, rl.Vector2{X: 5, Y: 5}, 20, 0, rl.White)
 		for i, v := range a.filtered {
-			rl.DrawTextEx(a.font, v.Value, rl.Vector2{X: 5, Y: float32(2 + (i+1)*20)}, 20, 0, rl.White)
+			rl.DrawTextEx(a.font, v.Value, rl.Vector2{X: 5, Y: float32(5 + (i+1)*20)}, 20, 0, rl.White)
 		}
 
 		if len(a.filtered) > 0 {
