@@ -1,5 +1,7 @@
 github.com/ebitengine/purego v0.11.2 h1:WWiTx8rD8zYdOwSj8O/NiNbsOvSAgJMTlyV1XlbUSeU=
 github.com/ebitengine/purego v0.11.2/go.mod h1:DCHPP08djqhNSoTfImcnHYQRZmd0qhakvrozqaEYhGQ=
+github.com/flopp/go-findfont v0.1.0 h1:lPn0BymDUtJo+ZkV01VS3661HL6F4qFlkhcJN55u6mU=
+github.com/flopp/go-findfont v0.1.0/go.mod h1:wKKxRDjD024Rh7VMwoU90i6ikQRCr+JTHB5n4Ejkqvw=
 github.com/gen2brain/raylib-go/raylib v0.60.1 h1:bZ9fRMOeIasK5Z9fNL8lnNVbCv9LevGIN//+gdvP+Zc=
 github.com/gen2brain/raylib-go/raylib v0.60.1/go.mod h1:puAMU7Zcx6VJ6pcZSSs3gGFPyFvJuTwQlfm4KzeoXy8=
 github.com/jupiterrider/ffi v0.8.0 h1:IH6lto8OZaRIulQYObtZibII4tq71hXT6Z+KLBcxCcQ=

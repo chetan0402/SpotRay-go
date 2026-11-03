@@ -2,7 +2,10 @@ module github.com/chetan0402/SpotRay-go
 
 go 1.27
 
-require github.com/gen2brain/raylib-go/raylib v0.60.1
+require (
+	github.com/flopp/go-findfont v0.1.0
+	github.com/gen2brain/raylib-go/raylib v0.60.1
+)
 
 require (
 	github.com/ebitengine/purego v0.11.2 // indirect

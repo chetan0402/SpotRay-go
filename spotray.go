@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/flopp/go-findfont"
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -28,6 +29,7 @@ type Item struct {
 type State struct {
 	Options  []Item
 	Keybinds map[int32]func(*App)
+	Font     string
 }
 
 type App struct {
@@ -43,7 +45,7 @@ type App struct {
 func NewApp() *App {
 	a := &App{
 		state:          nil,
-		lastPressed:    make(map[int32]keyState),
+		lastPressed:    map[int32]keyState{},
 		searchTerm:     "",
 		prevSearchTerm: " ",
 		selectedIndex:  0,
@@ -69,7 +71,7 @@ func (a *App) Start() error {
 		}
 
 		if a.prevSearchTerm != a.searchTerm {
-			a.filtered = make([]Item, 0)
+			a.filtered = []Item{}
 			for _, v := range a.state.Options {
 				if strings.Contains(strings.ToLower(v.Value), strings.ToLower(a.searchTerm)) {
 					a.filtered = append(a.filtered, v)
@@ -85,8 +87,9 @@ func (a *App) Start() error {
 			rn := time.Now().UnixMilli()
 			if rl.IsKeyPressed(i) {
 				a.lastPressed[i] = keyState{time: rn, d: FIRST}
+				v(a)
 			} else if rl.IsKeyDown(i) {
-				if (a.lastPressed[i].d == FIRST && a.lastPressed[i].time+150 < rn) || (a.lastPressed[i].d == REPEAT && a.lastPressed[i].time+40 < rn) {
+				if (a.lastPressed[i].d == FIRST && a.lastPressed[i].time+500 < rn) || (a.lastPressed[i].d == REPEAT && a.lastPressed[i].time+50 < rn) {
 					a.lastPressed[i] = keyState{time: rn, d: REPEAT}
 					v(a)
 				}
@@ -109,7 +112,7 @@ func (a *App) Start() error {
 	return nil
 }
 
-func (a *App) SetState(s *State) {
+func (a *App) SetState(s *State) error {
 	a.state = s
 	a.prevSearchTerm = a.searchTerm + " "
 
@@ -124,4 +127,13 @@ func (a *App) SetState(s *State) {
 	for i := range s.Keybinds {
 		a.lastPressed[i] = keyState{time.Now().UnixMilli(), FIRST}
 	}
+
+	if s.Font != "" {
+		path, err := findfont.Find(s.Font)
+		if err != nil {
+			return err
+		}
+		a.font = rl.LoadFontEx(path, 20, nil)
+	}
+	return nil
 }
