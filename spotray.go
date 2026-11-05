@@ -79,10 +79,6 @@ func (a *App) Start() error {
 			}
 		}
 
-		if len(a.filtered) > 0 {
-			a.selectedIndex = a.selectedIndex % len(a.filtered)
-		}
-
 		for i, v := range a.state.Keybinds {
 			rn := time.Now().UnixMilli()
 			if rl.IsKeyPressed(i) {
@@ -96,6 +92,10 @@ func (a *App) Start() error {
 			}
 		}
 
+		if len(a.filtered) > 0 {
+			a.selectedIndex = (a.selectedIndex%len(a.filtered) + len(a.filtered)) % len(a.filtered)
+		}
+
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.Color{R: 30, G: 45, B: 50, A: 200})
 		rl.DrawTextEx(a.font, a.searchTerm, rl.Vector2{X: 5, Y: 5}, 20, 0, rl.White)
@@ -104,7 +104,7 @@ func (a *App) Start() error {
 		}
 
 		if len(a.filtered) > 0 {
-			rl.DrawRectangle(5, int32(5+20*((a.selectedIndex%len(a.filtered))+1)), int32(rl.GetMonitorWidth(0)), 20, rl.ColorAlpha(rl.White, 0.2))
+			rl.DrawRectangle(5, int32(5+20*(a.selectedIndex+1)), int32(rl.GetMonitorWidth(0)), 20, rl.ColorAlpha(rl.White, 0.2))
 		}
 
 		rl.EndDrawing()
