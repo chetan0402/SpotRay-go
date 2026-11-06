@@ -137,3 +137,11 @@ func (a *App) SetState(s *State) error {
 	}
 	return nil
 }
+
+func (a *App) GetSelectedKey() string {
+	if len(a.filtered) == 0 {
+		return ""
+	}
+	a.selectedIndex = (a.selectedIndex%len(a.filtered) + len(a.filtered)) % len(a.filtered)
+	return a.filtered[a.selectedIndex].Key
+}
